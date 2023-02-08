@@ -2,6 +2,8 @@
 
 ## k3d
 
+NOTE: k3d does not support docker volumes backed by ZFS storage.
+
 ```bash
 GOAMD64=v3 CGO_ENABLED=0 GOBIN=~/.local/bin ~/go/bin/go1.19.5  install github.com/k3d-io/k3d/v5@v5.4.7
 ```
@@ -103,5 +105,11 @@ $ curl -Lo ~/.local/bin/skaffold https://storage.googleapis.com/skaffold/release
 $ chmod +x ~/.local/bin/skaffold
 $ skaffold version
 v2.1.0
+
 ```
 
+# stern (optional dev tool)
+
+```bash
+GOAMD64=v3 CGO_ENABLED=0 GOBIN=~/.local/bin ~/go/bin/go1.20  install github.com/stern/stern@v1.23.0
+```
