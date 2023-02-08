@@ -28,6 +28,18 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
+        - name: K8S_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: K8S_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: K8S_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
       volumeMounts:
         - mountPath: /usr/local/zeek/logs
           name: zeeklogs
@@ -75,7 +87,22 @@ data:
           if err != null {
             log("Unable to set K8S_NODE_NAME: " + err, level: "error")
           }
-          .k8s.nodeName = node_name
+          .k8s.node.name = node_name
+          pod_name, err = get_env_var("K8S_POD_NAME")
+          if err != null {
+            log("Unable to set K8S_POD_NAME: " + err, level: "error")
+          }
+          .k8s.pod.name = pod_name
+          pod_namespace, err = get_env_var("K8S_POD_NAMESPACE")
+          if err != null {
+            log("Unable to set K8S_POD_NAMESPACE: " + err, level: "error")
+          }
+          .k8s.pod.namespace = pod_namespace
+          pod_ip, err = get_env_var("K8S_POD_IP")
+          if err != null {
+            log("Unable to set K8S_POD_IP: " + err, level: "error")
+          }
+          .k8s.pod.ip = pod_ip
     sinks:
       stdout:
         type: console
