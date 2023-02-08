@@ -20,6 +20,7 @@ spec:
     - name: tail-zeeklogs-1
       image: timberio/vector:0.27.X-distroless-libc
       args:
+        - --watch-config
         - --config-yaml
         - /etc/vector/vector.yaml
       volumeMounts:
