@@ -23,6 +23,11 @@ spec:
         - --watch-config
         - --config-yaml
         - /etc/vector/vector.yaml
+      env:
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
       volumeMounts:
         - mountPath: /usr/local/zeek/logs
           name: zeeklogs
@@ -70,6 +75,11 @@ data:
           }
           . = merged
           del(.message)
+          node_name, err = get_env_var("K8S_NODE_NAME")
+          if err != null {
+            log("Unable to set K8S_NODE_NAME: " + err, level: "error")
+          }
+          .host = node_name
     sinks:
       stdout:
         type: console
