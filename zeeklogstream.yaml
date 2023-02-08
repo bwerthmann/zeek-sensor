@@ -79,7 +79,7 @@ data:
           if err != null {
             log("Unable to set K8S_NODE_NAME: " + err, level: "error")
           }
-          .host = node_name
+          .k8s.nodeName = node_name
     sinks:
       stdout:
         type: console
