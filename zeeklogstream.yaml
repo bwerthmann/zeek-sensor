@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zeeklogstream
+spec:
+  containers:
+    - name: zeeksensor-1
+      image: zeek/zeek:5.1.2
+      command:
+        - /usr/local/zeek/bin/zeek
+      args:
+        - -C
+        - -i
+        - eth0
+        - LogAscii::use_json=T
+      workingDir: /usr/local/zeek/logs
+      volumeMounts:
+        - mountPath: /usr/local/zeek/logs
+          name: zeeklogs
+    - name: tail-zeeklogs-1
+      image: timberio/vector:0.27.X-distroless-libc
+      args:
+        - --config-yaml
+        - /etc/vector/vector.yaml
+      volumeMounts:
+        - mountPath: /usr/local/zeek/logs
+          name: zeeklogs
+          readOnly: true
+        - name: vectorstate
+          mountPath: /var/lib/vector
+        - name: vectorcfg
+          mountPath: /etc/vector
+  volumes:
+    - name: zeeklogs
+      emptyDir: {}
+    - name: vectorstate
+      emptyDir: {}
+    - name: vectorcfg
+      projected:
+        sources:
+          - configMap:
+              name: vectorconfig
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vectorconfig
+data:
+  vector.yaml: |
+    data_dir: /var/lib/vector
+    sources:
+      zeek_logs:
+        type: file
+        include:
+          - /usr/local/zeek/logs/*.log
+    transforms:
+      remap_zeek:
+        inputs: [zeek_logs]
+        type: remap
+        reroute_dropped: true
+        source: |
+          structured, err = parse_json(.message)
+          if err != null {
+            log("Unable to parse JSON: " + err, level: "error")
+          }
+          merged, err = merge(., structured)
+          if err != null {
+            log("Unable to merge JSON: " + err, level: "error")
+          }
+          . = merged
+          del(.message)
+    sinks:
+      stdout:
+        type: console
+        inputs: [remap_zeek]
+        encoding:
+          codec: json

@@ -1,0 +1,13 @@
+apiVersion: skaffold/v4beta2
+kind: Config
+metadata:
+  name: sensor
+build:
+  artifacts:
+  - image: zeek/zeek
+    context: zeek
+    docker:
+      dockerfile: Dockerfile
+manifests:
+  rawYaml:
+  - zeeklogstream.yaml
