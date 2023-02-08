@@ -65,15 +65,11 @@ data:
         type: remap
         reroute_dropped: true
         source: |
-          structured, err = parse_json(.message)
+          zeekjson, err = parse_json(.message)
           if err != null {
             log("Unable to parse JSON: " + err, level: "error")
           }
-          merged, err = merge(., structured)
-          if err != null {
-            log("Unable to merge JSON: " + err, level: "error")
-          }
-          . = merged
+          .zeek = zeekjson
           del(.message)
           node_name, err = get_env_var("K8S_NODE_NAME")
           if err != null {
