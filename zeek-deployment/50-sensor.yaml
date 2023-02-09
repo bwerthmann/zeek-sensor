@@ -17,7 +17,7 @@ spec:
       workingDir: /usr/local/zeek/logs
       volumeMounts:
         - mountPath: /usr/local/zeek/logs
-          name: zeeklogs
+          name: sensorlogs
     - name: exporter
       image: timberio/vector:0.27.X-distroless-libc
       args:
@@ -43,18 +43,18 @@ spec:
               fieldPath: status.podIP
       volumeMounts:
         - mountPath: /usr/local/zeek/logs
-          name: zeeklogs
+          name: sensorlogs
           readOnly: true
-        - name: vectorstate
+        - name: exporterstate
           mountPath: /var/lib/vector
-        - name: vectorcfg
+        - name: exportercfg
           mountPath: /etc/vector
   volumes:
-    - name: zeeklogs
+    - name: sensorlogs
       emptyDir: {}
-    - name: vectorstate
+    - name: exporterstate
       emptyDir: {}
-    - name: vectorcfg
+    - name: exportercfg
       projected:
         sources:
           - configMap:
