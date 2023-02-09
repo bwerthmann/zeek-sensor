@@ -10,4 +10,4 @@ build:
       dockerfile: Dockerfile
 manifests:
   rawYaml:
-  - zeek-deployment.yaml
+  - zeek-deployment/*.yaml
