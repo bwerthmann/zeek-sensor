@@ -113,3 +113,12 @@ v2.1.0
 ```bash
 GOAMD64=v3 CGO_ENABLED=0 GOBIN=~/.local/bin ~/go/bin/go1.20  install github.com/stern/stern@v1.23.0
 ```
+
+# helm
+
+```console
+$ sudo snap install helm --classic
+helm 3.7.0 from Snapcrafters installed
+$ helm version
+version.BuildInfo{Version:"v3.7.0", GitCommit:"eeac83883cb4014fe60267ec6373570374ce770b", GitTreeState:"clean", GoVersion:"go1.16.8"}
+```
