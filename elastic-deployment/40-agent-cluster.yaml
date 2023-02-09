@@ -1,14 +1,14 @@
 apiVersion: agent.k8s.elastic.co/v1alpha1
 kind: Agent
 metadata:
-  name: fleet-server-quickstart
+  name: fleet-server
   namespace: default
 spec:
   version: 8.6.1
   kibanaRef:
-    name: kibana-quickstart
+    name: quickstart
   elasticsearchRefs:
-  - name: elasticsearch-quickstart
+  - name: quickstart
   mode: fleet
   fleetServerEnabled: true
   deployment:
@@ -23,14 +23,14 @@ spec:
 apiVersion: agent.k8s.elastic.co/v1alpha1
 kind: Agent
 metadata:
-  name: elastic-agent-quickstart
+  name: elastic-agent
   namespace: default
 spec:
   version: 8.6.1
   kibanaRef:
-    name: kibana-quickstart
+    name: quickstart
   fleetServerRef:
-    name: fleet-server-quickstart
+    name: fleet-server
   mode: fleet
   daemonSet:
     podTemplate:
@@ -43,16 +43,16 @@ spec:
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
-  name: kibana-quickstart
+  name: quickstart
   namespace: default
 spec:
   version: 8.6.1
   count: 1
   elasticsearchRef:
-    name: elasticsearch-quickstart
+    name: quickstart
   config:
-    xpack.fleet.agents.elasticsearch.hosts: ["https://elasticsearch-quickstart-es-http.default.svc:9200"]
-    xpack.fleet.agents.fleet_server.hosts: ["https://fleet-server-quickstart-agent-http.default.svc:8220"]
+    xpack.fleet.agents.elasticsearch.hosts: ["https://quickstart-es-http.default.svc:9200"]
+    xpack.fleet.agents.fleet_server.hosts: ["https://fleet-server-agent-http.default.svc:8220"]
     xpack.fleet.packages:
       - name: system
         version: latest
@@ -91,7 +91,7 @@ spec:
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: elasticsearch-quickstart
+  name: quickstart
   namespace: default
 spec:
   version: 8.6.1
