@@ -10,4 +10,4 @@ build:
       dockerfile: Dockerfile
 manifests:
   rawYaml:
-  - zeeklogstream.yaml
+  - zeek-deployment.yaml
