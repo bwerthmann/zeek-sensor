@@ -17,11 +17,21 @@ data:
         type: remap
         reroute_dropped: true
         source: |
+          zeekfileparts = split!(.file, "/")
+          zeekfilename = zeekfileparts[5]
+          zeekfile = split!(zeekfilename,".log")[0]
+          if zeekfile == "conn" {
+            zeekfile = "connection"
+          }
           zeekjson, err = parse_json(.message)
           if err != null {
             log("Unable to parse JSON: " + err, level: "error")
           }
-          .zeek = zeekjson
+          obj, err = set(., ["zeek", zeekfile], zeekjson)
+          if err != null {
+            log("Unable to set zeek path: " + err, level: "error")
+          }
+          . = obj
           del(.message)
           node_name, err = get_env_var("K8S_NODE_NAME")
           if err != null {
