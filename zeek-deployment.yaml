@@ -1,10 +1,16 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: zeek
+---
+apiVersion: v1
 kind: Pod
 metadata:
-  name: zeeklogstream
+  name: sensor
+  namespace: zeek
 spec:
   containers:
-    - name: zeeksensor-1
+    - name: sensor
       image: zeek/zeek:5.1.2
       command:
         - /usr/local/zeek/bin/zeek
@@ -17,7 +23,7 @@ spec:
       volumeMounts:
         - mountPath: /usr/local/zeek/logs
           name: zeeklogs
-    - name: tail-zeeklogs-1
+    - name: zeeklogs
       image: timberio/vector:0.27.X-distroless-libc
       args:
         - --watch-config
@@ -63,6 +69,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: vectorconfig
+  namespace: zeek
 data:
   vector.yaml: |
     data_dir: /var/lib/vector
