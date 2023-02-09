@@ -89,6 +89,7 @@ spec:
             id: system-1
             package:
               name: system
+    xpack.monitoring.collection.enabled: true
 ---
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
