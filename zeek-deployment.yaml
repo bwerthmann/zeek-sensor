@@ -23,7 +23,7 @@ spec:
       volumeMounts:
         - mountPath: /usr/local/zeek/logs
           name: zeeklogs
-    - name: zeeklogs
+    - name: exporter
       image: timberio/vector:0.27.X-distroless-libc
       args:
         - --watch-config
