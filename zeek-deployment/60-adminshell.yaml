@@ -5,8 +5,14 @@ metadata:
   namespace: zeek
 spec:
   containers:
-    - name: tester
+    - name: zeek
       image: zeek/zeek:5.1.2
+      command:
+        - /bin/bash
+        - -c
+        - sleep inf
+    - name: vector
+      image: timberio/vector:0.27.0-debian
       command:
         - /bin/bash
         - -c
