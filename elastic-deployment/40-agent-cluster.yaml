@@ -60,6 +60,8 @@ spec:
         version: latest
       - name: fleet_server
         version: latest
+      - name: zeek
+        version: latest
     xpack.fleet.agentPolicies:
       - name: Fleet Server on ECK policy
         id: eck-fleet-server
