@@ -44,8 +44,13 @@ data:
           }
           .k8s.pod.ip = pod_ip
     sinks:
-      stdout:
-        type: console
-        inputs: [remap_zeek]
-        encoding:
-          codec: json
+      aggregator:
+        type: vector
+        inputs:
+          - remap_zeek
+        address: vector.vector:6000
+      aggregatordrop:
+        type: vector
+        inputs:
+          - remap_zeek.dropped
+        address: vector.vector:6000
