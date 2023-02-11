@@ -51,6 +51,59 @@ Metrics-server is running at https://0.0.0.0:42415/api/v1/namespaces/kube-system
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
+## Install Elastic Search
+
+
+```console
+$ cd elastic-deployment
+$ kubectl apply -f 00-crds.yaml
+customresourcedefinition.apiextensions.k8s.io/agents.agent.k8s.elastic.co created
+customresourcedefinition.apiextensions.k8s.io/apmservers.apm.k8s.elastic.co created
+customresourcedefinition.apiextensions.k8s.io/beats.beat.k8s.elastic.co created
+customresourcedefinition.apiextensions.k8s.io/elasticmapsservers.maps.k8s.elastic.co created
+customresourcedefinition.apiextensions.k8s.io/elasticsearchautoscalers.autoscaling.k8s.elastic.co created
+customresourcedefinition.apiextensions.k8s.io/elasticsearches.elasticsearch.k8s.elastic.co created
+customresourcedefinition.apiextensions.k8s.io/enterprisesearches.enterprisesearch.k8s.elastic.co created
+customresourcedefinition.apiextensions.k8s.io/kibanas.kibana.k8s.elastic.co created
+customresourcedefinition.apiextensions.k8s.io/stackconfigpolicies.stackconfigpolicy.k8s.elastic.co created
+```
+```console
+$ kubectl apply -f 10-operator.yaml
+namespace/elastic-system created
+serviceaccount/elastic-operator created
+secret/elastic-webhook-server-cert created
+configmap/elastic-operator created
+clusterrole.rbac.authorization.k8s.io/elastic-operator created
+clusterrole.rbac.authorization.k8s.io/elastic-operator-view created
+clusterrole.rbac.authorization.k8s.io/elastic-operator-edit created
+clusterrolebinding.rbac.authorization.k8s.io/elastic-operator created
+service/elastic-webhook-server created
+statefulset.apps/elastic-operator created
+validatingwebhookconfiguration.admissionregistration.k8s.io/elastic-webhook.k8s.elastic.co created
+```
+```console
+$ kubectl apply -f 40-agent-cluster.yaml
+agent.agent.k8s.elastic.co/fleet-server created
+kibana.kibana.k8s.elastic.co/quickstart created
+elasticsearch.elasticsearch.k8s.elastic.co/quickstart created
+clusterrole.rbac.authorization.k8s.io/elastic-agent created
+serviceaccount/elastic-agent created
+clusterrolebinding.rbac.authorization.k8s.io/elastic-agent created
+```
+
+### Access Kibana
+
+* Port Forward Kibana
+```
+$ kubectl port-forward service/quickstart-kb-http 5601
+Forwarding from 127.0.0.1:5601 -> 5601
+Forwarding from [::1]:5601 -> 5601
+```
+* Open `https://localhost:5601/` in browser
+* Accept TLS warning
+* Username: `elastic`
+* Password: `kubectl get secret quickstart-es-elastic-user -o go-template='{{.data.elastic | base64decode}}'; echo`
+
 # Runbooks for tools install (and known issues / workarounds)
 
 This is a log of what worked for Ben, on his machine, at the time of install. It also captures any issues/workarounds encountered.
