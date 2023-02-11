@@ -18,3 +18,9 @@ images:
 resources:
   # The namespace previously created to keep the resources in.
   - namespace.yaml
+
+configMapGenerator:
+  - name: vector
+    behavior: replace
+    files:
+      - aggregator.yaml
