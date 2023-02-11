@@ -4,8 +4,51 @@ See the tools section for specific versions in use along with known issues and t
 
 ## Create a k3s cluster in docker with k3d
 
+YMMV on the resources. ELK is by far the largest consumer of resources. Note that _without_ memory limits every node scheduler will think each _node_ has total RAM availible. Placing a memory limit on all nodes ensures that the scheduler behavior is more realistic. The same it true for CPU as well.
+
+```console
+$ k3d cluster create sensor -s 3 --servers-memory 4G -a 4 --agents-memory 16G
+INFO[0000] Prep: Network                                
+INFO[0000] Created network 'k3d-sensor'                 
+INFO[0000] Created image volume k3d-sensor-images       
+INFO[0000] Starting new tools node...                   
+INFO[0000] Creating initializing server node            
+INFO[0000] Creating node 'k3d-sensor-server-0'          
+INFO[0000] Starting Node 'k3d-sensor-tools'             
+INFO[0002] Creating node 'k3d-sensor-server-1'          
+INFO[0003] Creating node 'k3d-sensor-server-2'          
+INFO[0004] Creating node 'k3d-sensor-agent-0'           
+INFO[0005] Creating node 'k3d-sensor-agent-1'           
+INFO[0006] Creating node 'k3d-sensor-agent-2'           
+INFO[0006] Creating node 'k3d-sensor-agent-3'           
+INFO[0007] Creating LoadBalancer 'k3d-sensor-serverlb'  
+INFO[0007] Using the k3d-tools node to gather environment information 
+INFO[0007] HostIP: using network gateway 172.18.0.1 address 
+INFO[0007] Starting cluster 'sensor'                    
+INFO[0007] Starting the initializing server...          
+INFO[0007] Starting Node 'k3d-sensor-server-0'          
+INFO[0010] Starting servers...                          
+INFO[0010] Starting Node 'k3d-sensor-server-1'          
+INFO[0029] Starting Node 'k3d-sensor-server-2'          
+INFO[0045] Starting agents...                           
+INFO[0045] Starting Node 'k3d-sensor-agent-1'           
+INFO[0045] Starting Node 'k3d-sensor-agent-3'           
+INFO[0045] Starting Node 'k3d-sensor-agent-2'           
+INFO[0045] Starting Node 'k3d-sensor-agent-0'           
+INFO[0054] Starting helpers...                          
+INFO[0054] Starting Node 'k3d-sensor-serverlb'          
+INFO[0060] Injecting records for hostAliases (incl. host.k3d.internal) and for 8 network members into CoreDNS configmap... 
+INFO[0062] Cluster 'sensor' created successfully!       
+INFO[0062] You can now use it like this:                
+kubectl cluster-info
 ```
-$ k3d cluster create -s 3 --servers-memory 4G -a 4 --agents-memory 16G
+```console
+$ kubectl cluster-info 
+Kubernetes control plane is running at https://0.0.0.0:42415
+CoreDNS is running at https://0.0.0.0:42415/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://0.0.0.0:42415/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
 # Runbooks for tools install (and known issues / workarounds)
