@@ -270,3 +270,20 @@ helm 3.7.0 from Snapcrafters installed
 $ helm version
 version.BuildInfo{Version:"v3.7.0", GitCommit:"eeac83883cb4014fe60267ec6373570374ce770b", GitTreeState:"clean", GoVersion:"go1.16.8"}
 ```
+
+## k9s (optional)
+
+```console
+$ sudo snap install k9s
+```
+There's an issue with k9s or the snap. Snap thinks KUBECONFIG is in the snap directory tree.
+
+Run with:
+
+```bash
+KUBECONFIG=$HOME/.kube/config k9s
+```
+Add a shell alias to `~/.bash_aliases`:
+```bash
+alias k9s='KUBECONFIG=$HOME/.kube/config k9s'
+```
