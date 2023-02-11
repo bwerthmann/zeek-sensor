@@ -1,8 +1,156 @@
-# Install needed tools
+# Up and Running
+
+See the tools section for specific versions in use along with known issues and troubleshooting.
+
+## Create a k3s cluster in docker with k3d
+
+```
+$ k3d cluster create -s 3 --servers-memory 4G -a 4 --agents-memory 16G
+```
+
+# Runbooks for tools install (and known issues / workarounds)
+
+This is a log of what worked for Ben, on his machine, at the time of install. It also captures any issues/workarounds encountered.
+
+## Environmental Info
+
+Fully patched Ubuntu 20.04 LTS workstation
+
+  * CPU: 16C/32T Threadripper Pro
+  * RAM: 128 GB ECC
+  * ZFS root
+  * "HWE" kernel version: `5.15.0-60-generic` via `linux-image-generic-hwe-20.04`
+
+Call out anything strange about Ben's env for context.
+
+  * Locally built binaries go to `~/.local/bin`. Most people use `/usr/local/bin` for this purpose.
+  * `~/go/bin/$goversion` is for concurrently installed go versions.
+  * Shell is Bash `5.0.17(1)-release`.
+
+## docker
+
+### ZFS users: `k3d`/`k3s` does not work when Docker storage is `zfs`
+
+* `containerd` _inside_ `k3d` fails to launch containers on ZFS storage.
+* `k3s` logs a message like this in the logs:
+```
+Failed to retrieve agent config: "overlayfs" snapshotter cannot be enabled for "/var/lib/rancher/k3s/agent/containerd", try using "fuse-overlayfs" or "native": failed to mount overlay: invalid argument
+```
+* see: https://github.com/containerd/containerd/discussions/6140
+* In the interest of time I blew away my existing docker env for something well supported.
+  * `sudo systemctl stop docker.socket containerd.service`
+  * `sudo mv /etc/systemd/system/docker.service.d/override.conf /etc/systemd/system/docker.service.d/.#override.conf`
+```
+[Unit]
+RequiresMountsFor=/var/lib/docker
+
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -s zfs --storage-opt zfs.fsname=rpool/DOCKER/containers
+```
+  * `sudo systemctl daemon-reload`
+  * `sudo zfs destroy -r rpool/DOCKER/containers` (due to `zfs.fsname`)
+  * `sudo umount /var/lib/docker`
+  * `sudo zfs destroy rpool/DOCKER/var-lib-docker`
+  * `sudo zfs create -b 4k -V 100G rpool/DOCKER/var-lib-docker`
+  * `sudo mkfs.xfs -b size=4k -n ftype=1  /dev/zvol/rpool/DOCKER/var-lib-docker`
+  * `sudo sh -c 'echo "/dev/zvol/rpool/DOCKER/var-lib-docker /var/lib/docker xfs defaults,noatime 0 0" >>/etc/fstab"'`
+  * `sudo mount -a`
+  * `sudo systemctl start docker.socket containerd.service`
+  * `docker version` (see below)
+  * `docker info` (see below)
+
+### Working Docker Info
+
+```console
+$ docker version
+Client:
+ Version:           20.10.12
+ API version:       1.41
+ Go version:        go1.16.2
+ Git commit:        20.10.12-0ubuntu2~20.04.1
+ Built:             Wed Apr  6 02:14:38 2022
+ OS/Arch:           linux/amd64
+ Context:           default
+ Experimental:      true
+
+Server:
+ Engine:
+  Version:          20.10.12
+  API version:      1.41 (minimum version 1.12)
+  Go version:       go1.16.2
+  Git commit:       20.10.12-0ubuntu2~20.04.1
+  Built:            Thu Feb 10 15:03:35 2022
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.5.9-0ubuntu1~20.04.6
+  GitCommit:        
+ runc:
+  Version:          1.1.0-0ubuntu1~20.04.2
+  GitCommit:        
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        
+```
+
+```console
+$ docker info
+Client:
+ Context:    default
+ Debug Mode: false
+
+Server:
+ Containers: 0
+  Running: 0
+  Paused: 0
+  Stopped: 0
+ Images: 0
+ Server Version: 20.10.12
+ Storage Driver: overlay2
+  Backing Filesystem: xfs
+  Supports d_type: true
+  Native Overlay Diff: true
+  userxattr: false
+ Logging Driver: json-file
+ Cgroup Driver: cgroupfs
+ Cgroup Version: 1
+ Plugins:
+  Volume: local
+  Network: bridge host ipvlan macvlan null overlay
+  Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
+ Swarm: inactive
+ Runtimes: runc io.containerd.runc.v2 io.containerd.runtime.v1.linux
+ Default Runtime: runc
+ Init Binary: docker-init
+ containerd version: 
+ runc version: 
+ init version: 
+ Security Options:
+  apparmor
+  seccomp
+   Profile: default
+ Kernel Version: 5.15.0-60-generic
+ Operating System: Ubuntu 20.04.5 LTS
+ OSType: linux
+ Architecture: x86_64
+ CPUs: 32
+ Total Memory: 125.6GiB
+ Name: transwarp
+ ID: G3PT:SRNI:CIJL:AUNU:QOZZ:Y6KT:JQWU:TUD5:WYZJ:Y6J3:YAI3:LFTD
+ Docker Root Dir: /var/lib/docker
+ Debug Mode: false
+ Registry: https://index.docker.io/v1/
+ Labels:
+ Experimental: false
+ Insecure Registries:
+  127.0.0.0/8
+ Live Restore Enabled: false
+
+```
 
 ## k3d
 
-NOTE: k3d does not support docker volumes backed by ZFS storage.
 
 ```bash
 GOAMD64=v3 CGO_ENABLED=0 GOBIN=~/.local/bin ~/go/bin/go1.19.5  install github.com/k3d-io/k3d/v5@v5.4.7
