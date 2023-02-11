@@ -256,13 +256,13 @@ v2.1.0
 
 ```
 
-# stern (optional dev tool)
+## stern (optional)
 
 ```bash
 GOAMD64=v3 CGO_ENABLED=0 GOBIN=~/.local/bin ~/go/bin/go1.20  install github.com/stern/stern@v1.23.0
 ```
 
-# helm
+## helm
 
 ```console
 $ sudo snap install helm --classic
