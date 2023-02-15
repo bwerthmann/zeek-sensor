@@ -37,7 +37,7 @@ sinks:
     address: 0.0.0.0:9090
   stdout:
     type: console
-    inputs: [datadog_agent, fluent, logstash, splunk_hec, statsd, syslog, vector]
+    inputs: [datadog_agent, fluent, logstash, splunk_hec, statsd, syslog]
     encoding:
       codec: json
   elasticsearch:

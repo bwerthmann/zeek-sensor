@@ -139,6 +139,66 @@ Forwarding from [::1]:5601 -> 5601
 * Accept TLS warning
 * Username: `elastic`
 * Password: `kubectl get secret quickstart-es-elastic-user -o go-template='{{.data.elastic | base64decode}}'; echo`
+
+# Observe Vector log processing
+
+## Open a `top` like TUI for a vector instance.
+
+```bash
+kubectl exec vector-0 -i -t -- vector top
+```
+
+## Sample logs passing through vector
+
+```console
+$ kubectl exec vector-0 -i -t -- vector tap --inputs-of elasticsearch
+[tap] Pattern 'elasticsearch' successfully matched.
+```
+```json
+{"file":"/usr/local/zeek/logs/packet_filter.log","host":"sensor","k8s":{"node":{"name":"k3d-sensor-agent-0"},"pod":{"ip":"10.42.5.14","name":"sensor","namespace":"zeek"}},"source_type":"file","timestamp":"2023-02-15T16:29:00.834312026Z","zeek":{"packet_filter":{"filter":"ip or not ip","init":true,"node":"zeek","success":true,"ts":1676478539.841147}}}
+{"file":"/usr/local/zeek/logs/conn.log","host":"sensor","k8s":{"node":{"name":"k3d-sensor-agent-0"},"pod":{"ip":"10.42.5.14","name":"sensor","namespace":"zeek"}},"source_type":"file","timestamp":"2023-02-15T16:30:02.330696257Z","zeek":{"connection":{"conn_state":"OTH","duration":0.000017881393432617188,"id.orig_h":"fe80::c08f:f8ff:fe64:7b9c","id.orig_p":143,"id.resp_h":"ff02::16","id.resp_p":0,"missed_bytes":0,"orig_bytes":40,"orig_ip_bytes":152,"orig_pkts":2,"proto":"icmp","resp_bytes":0,"resp_ip_bytes":0,"resp_pkts":0,"ts":1676478539.935714,"uid":"CIWq6P2Ib48tFXxzjh"}}}
+```
+
+### vector tap with pretty printed yaml
+
+```console
+$ kubectl exec vector-0 -i -t -- vector tap --inputs-of elasticsearch -f yaml
+[tap] Pattern 'elasticsearch' successfully matched.
+```
+```yaml
+file: /usr/local/zeek/logs/http.log
+host: sensor
+k8s:
+  node:
+    name: k3d-sensor-agent-0
+  pod:
+    ip: 10.42.5.15
+    name: sensor
+    namespace: zeek
+source_type: file
+timestamp: 2023-02-15T16:51:20.816586705Z
+zeek:
+  http:
+    host: deb.debian.org
+    id.orig_h: 10.42.5.15
+    id.orig_p: 33912
+    id.resp_h: 199.232.30.132
+    id.resp_p: 80
+    method: GET
+    request_body_len: 0
+    response_body_len: 0
+    status_code: 304
+    status_msg: Not Modified
+    tags: []
+    trans_depth: 1
+    ts: 1676479878.908009
+    uid: CXivoz2Y2ADaaq5rte
+    uri: /debian/dists/bullseye/InRelease
+    user_agent: Debian APT-HTTP/1.3 (2.2.4)
+    version: '1.1'
+
+```
+
 # Cleanup
 
 ```console

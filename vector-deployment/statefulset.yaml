@@ -6,3 +6,7 @@
         secretKeyRef:
           name: quickstart-es-elastic-user
           key: elastic
+
+- op: add
+  path: /spec/template/spec/containers/0/args/2
+  value: --watch-config
