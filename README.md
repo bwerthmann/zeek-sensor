@@ -272,6 +272,22 @@ Server:
 
 ## k3d
 
+```console
+$ curl -sLO https://github.com/k3d-io/k3d/releases/download/v5.4.7/k3d-linux-amd64
+$ chmod +x k3d-linux-amd64
+$ mv k3d-linux-amd64 ~/.local/bin/k3d
+```
+
+```console
+$ ./k3d-linux-amd64 version
+k3d version v5.4.7
+k3s version v1.25.6-k3s1 (default)
+
+```
+
+### k3d broken install
+
+Do not `go install` `k3d`. This results in `k3s version v1.21.7-k3s1` instead of `k3s version v1.25.6-k3s1`.
 
 ```bash
 GOAMD64=v3 CGO_ENABLED=0 GOBIN=~/.local/bin ~/go/bin/go1.19.5  install github.com/k3d-io/k3d/v5@v5.4.7
