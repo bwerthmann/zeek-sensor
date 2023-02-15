@@ -105,10 +105,12 @@ statefulset.apps/vector created
 
 ## Deploy Zeek
 
+This custom image installs `zeek/mitre-attack/bzar` with `zkg`.
+
 ```console
-$ skaffold run
+$ skaffold run --profile zeek-deployment
 Generating tags...
- - zeek/zeek -> zeek/zeek:7ac1aff
+ - zeek/zeek -> zeek/zeek:80b8a7c
 Checking cache...
  - zeek/zeek: Found Locally
 Starting test...
@@ -117,13 +119,13 @@ Tags used in deployment:
 Starting deploy...
 Loading images into k3d cluster nodes...
  - zeek/zeek:7011a45c668a1856a3891a35981c0c77a03b9bd138ca4d78d5bbdfe4196ff43c -> Found
-Images loaded in 101.311891ms
+Images loaded in 94.874958ms
  - namespace/zeek created
- - pod/sensor created
- - configmap/vectorconfig created
+ - configmap/vector-sidecar-b8t59h8t22 created
+ - deployment.apps/sensor created
 Waiting for deployments to stabilize...
- - pods is ready.
-Deployments stabilized in 2.123 seconds
+ - zeek:deployment/sensor is ready.
+Deployments stabilized in 2.196 seconds
 You can also run [skaffold run --tail] to get the logs
 ```
 
