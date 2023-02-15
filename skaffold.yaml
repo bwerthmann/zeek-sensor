@@ -9,5 +9,12 @@ build:
     docker:
       dockerfile: Dockerfile
 manifests:
-  rawYaml:
-  - zeek-deployment/*.yaml
+  kustomize:
+    paths:
+    - vector-deployment
+profiles:
+- name: zeek-deployment
+  manifests:
+    kustomize:
+      paths:
+      - zeek-deployment

@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sensor
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: zeek
+  template:
+    metadata:
+      labels:
+        app: zeek
+    spec:
+      containers:
+        - name: sensor
+          image: zeek/zeek:5.1.2
+          command:
+            - /usr/local/zeek/bin/zeek
+          args:
+            - -C
+            - -i
+            - eth0
+            - LogAscii::use_json=T
+          workingDir: /usr/local/zeek/logs
+          volumeMounts:
+            - mountPath: /usr/local/zeek/logs
+              name: sensorlogs
+        - name: exporter
+          image: timberio/vector:0.27.X-distroless-libc
+          args:
+            - --watch-config
+            - --config-yaml
+            - /etc/vector/sidecar.yaml
+          env:
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: K8S_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: K8S_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: K8S_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          volumeMounts:
+            - mountPath: /usr/local/zeek/logs
+              name: sensorlogs
+              readOnly: true
+            - name: exporterstate
+              mountPath: /var/lib/vector
+            - name: exportercfg
+              mountPath: /etc/vector
+      volumes:
+        - name: sensorlogs
+          emptyDir: {}
+        - name: exporterstate
+          emptyDir: {}
+        - name: exportercfg
+          projected:
+            sources:
+              - configMap:
+                  name: vector-sidecar
