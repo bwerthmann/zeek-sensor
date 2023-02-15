@@ -380,6 +380,41 @@ version.BuildInfo{Version:"v3.7.0", GitCommit:"eeac83883cb4014fe60267ec637357037
 ## k9s (optional)
 
 ```console
+$ curl -ssL https://github.com/derailed/k9s/releases/download/v0.27.3/k9s_Linux_amd64.tar.gz |tar -C ~/.local/bin -xvzf - k9s
+```
+
+```console
+$ k9s version
+ ____  __.________       
+|    |/ _/   __   \______
+|      < \____    /  ___/
+|    |  \   /    /\___ \ 
+|____|__ \ /____//____  >
+        \/            \/ 
+
+Version:    v0.27.3
+Commit:     7c76691c389e4e7de29516932a304f7029307c6d
+Date:       2023-02-12T15:19:22Z
+```
+
+
+### Note Snap is no longer updated
+
+```console
+$ k9s version
+ ____  __.________       
+|    |/ _/   __   \______
+|      < \____    /  ___/
+|    |  \   /    /\___ \ 
+|____|__ \ /____//____  >
+        \/            \/ 
+
+Version:   0.7.12
+Commit:    fe11d334c7929fab7a63cf8703b90d8d2adf1dbb
+Date:      2019-07-12T14:26:36Z
+```
+
+```console
 $ sudo snap install k9s
 ```
 There's an issue with k9s or the snap. Snap thinks KUBECONFIG is in the snap directory tree.
