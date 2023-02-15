@@ -57,6 +57,7 @@ spec:
               mountPath: /vector-data-dir
             - name: exportercfg
               mountPath: /etc/vector
+      terminationGracePeriodSeconds: 90
       volumes:
         - name: sensorlogs
           emptyDir: {}
