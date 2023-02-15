@@ -91,19 +91,6 @@ serviceaccount/elastic-agent created
 clusterrolebinding.rbac.authorization.k8s.io/elastic-agent created
 ```
 
-### Access Kibana
-
-* Port Forward Kibana
-```
-$ kubectl port-forward service/quickstart-kb-http 5601
-Forwarding from 127.0.0.1:5601 -> 5601
-Forwarding from [::1]:5601 -> 5601
-```
-* Open `https://localhost:5601/` in browser
-* Accept TLS warning
-* Username: `elastic`
-* Password: `kubectl get secret quickstart-es-elastic-user -o go-template='{{.data.elastic | base64decode}}'; echo`
-
 ## Install Vector Aggregator
 
 ```console
@@ -116,7 +103,42 @@ service/vector-headless created
 statefulset.apps/vector created
 ```
 
+## Deploy Zeek
 
+```console
+$ skaffold run
+Generating tags...
+ - zeek/zeek -> zeek/zeek:7ac1aff
+Checking cache...
+ - zeek/zeek: Found Locally
+Starting test...
+Tags used in deployment:
+ - zeek/zeek -> zeek/zeek:7011a45c668a1856a3891a35981c0c77a03b9bd138ca4d78d5bbdfe4196ff43c
+Starting deploy...
+Loading images into k3d cluster nodes...
+ - zeek/zeek:7011a45c668a1856a3891a35981c0c77a03b9bd138ca4d78d5bbdfe4196ff43c -> Found
+Images loaded in 101.311891ms
+ - namespace/zeek created
+ - pod/sensor created
+ - configmap/vectorconfig created
+Waiting for deployments to stabilize...
+ - pods is ready.
+Deployments stabilized in 2.123 seconds
+You can also run [skaffold run --tail] to get the logs
+```
+
+# Access Zeek Logs with Kibana
+
+* Port Forward Kibana
+```
+$ kubectl port-forward service/quickstart-kb-http 5601
+Forwarding from 127.0.0.1:5601 -> 5601
+Forwarding from [::1]:5601 -> 5601
+```
+* Open `https://localhost:5601/` in browser
+* Accept TLS warning
+* Username: `elastic`
+* Password: `kubectl get secret quickstart-es-elastic-user -o go-template='{{.data.elastic | base64decode}}'; echo`
 # Cleanup
 
 ```console
