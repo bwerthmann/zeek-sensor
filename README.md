@@ -151,6 +151,15 @@ Deployments stabilized in 2.196 seconds
 You can also run [skaffold run --tail] to get the logs
 ```
 
+### Test Zeek Dataplane
+
+```console
+$ bash testing/zdp.sh
+It should have a conn.log with at least one JSON entry
+{"ts":1676501197.719535,"uid":"CDfaFuIhswby4Qv97","id.orig_h":"10.42.4.8","id.orig_p":37249,"id.resp_h":"10.43.0.10","id.resp_p":53,"proto":"udp","service":"dns","duration":0.0004069805145263672,"orig_bytes":100,"resp_bytes":241,"conn_state":"SF","missed_bytes":0,"history":"Dd","orig_pkts":2,"orig_ip_bytes":156,"resp_pkts":2,"resp_ip_bytes":297}
+Success!
+```
+
 # Access Zeek Logs with Kibana
 
 * Port Forward Kibana
