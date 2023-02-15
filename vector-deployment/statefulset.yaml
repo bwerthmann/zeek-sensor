@@ -1,0 +1,8 @@
+- op: add
+  path: /spec/template/spec/containers/0/env
+  value:
+    - name: ELASTICSEARCH_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: quickstart-es-elastic-user
+          key: elastic

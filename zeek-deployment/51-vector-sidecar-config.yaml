@@ -58,9 +58,9 @@ data:
         type: vector
         inputs:
           - remap_zeek
-        address: vector.vector.svc.cluster.local.:6000
+        address: vector.default.svc.cluster.local.:6000
       aggregatordrop:
         type: vector
         inputs:
           - remap_zeek.dropped
-        address: vector.vector.svc.cluster.local.:6000
+        address: vector.default.svc.cluster.local.:6000

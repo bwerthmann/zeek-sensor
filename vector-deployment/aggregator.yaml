@@ -40,3 +40,22 @@ sinks:
     inputs: [datadog_agent, fluent, logstash, splunk_hec, statsd, syslog, vector]
     encoding:
       codec: json
+  elasticsearch:
+    type: elasticsearch
+    endpoints:
+      - https://quickstart-es-http.default.svc:9200
+    tls:
+      verify_certificate: false
+    auth:
+      strategy: basic
+      user: elastic
+      password: "${ELASTICSEARCH_PASSWORD}"
+    inputs:
+      - vector
+    bulk:
+      action: create
+    mode: data_stream
+    data_stream:
+      type: customlogs
+      dataset: generic
+      namespace: default

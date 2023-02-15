@@ -104,6 +104,18 @@ Forwarding from [::1]:5601 -> 5601
 * Username: `elastic`
 * Password: `kubectl get secret quickstart-es-elastic-user -o go-template='{{.data.elastic | base64decode}}'; echo`
 
+## Install Vector Aggregator
+
+```console
+$ cd vector-deployment
+$ kubectl apply -k .
+serviceaccount/vector created
+configmap/vector created
+service/vector created
+service/vector-headless created
+statefulset.apps/vector created
+```
+
 # Runbooks for tools install (and known issues / workarounds)
 
 This is a log of what worked for Ben, on his machine, at the time of install. It also captures any issues/workarounds encountered.

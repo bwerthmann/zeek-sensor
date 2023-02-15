@@ -3,7 +3,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 # Override the namespace of all of the resources we manage.
-namespace: vector
+namespace: default
 
 bases:
   # Include Vector recommended base (from git).
@@ -17,10 +17,18 @@ images:
 
 resources:
   # The namespace previously created to keep the resources in.
-  - namespace.yaml
+  # - namespace.yaml
 
 configMapGenerator:
   - name: vector
     behavior: replace
     files:
       - aggregator.yaml
+
+patchesJson6902:
+  - target:
+      group: apps
+      version: v1
+      kind: StatefulSet
+      name: vector
+    path: statefulset.yaml
