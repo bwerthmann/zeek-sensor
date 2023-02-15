@@ -54,7 +54,7 @@ spec:
               name: sensorlogs
               readOnly: true
             - name: exporterstate
-              mountPath: /var/lib/vector
+              mountPath: /vector-data-dir
             - name: exportercfg
               mountPath: /etc/vector
       volumes:
