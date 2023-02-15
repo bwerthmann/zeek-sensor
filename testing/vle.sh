@@ -1,4 +1,6 @@
+#!/bin/bash
 
+set -e
 
 # kubectl exec -n zeek sensor -c sensor  -- cat dns.log |jq '.'
 
