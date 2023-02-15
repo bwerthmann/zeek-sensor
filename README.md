@@ -1,3 +1,25 @@
+# Overview
+
+This project is an example deployment of Zeek in k3d/k3s. Zeek's primary
+artifact of interest is it's log files. Each entry represents network
+events. For this demo we are side-stepping k8s logging in favor of
+a dedicated log processing pipeline for zeek events. Vector was selected
+due to it's runtime simplicity, high performance / low-overhead, and flexibility in processing log (and metrics) data, and observability.
+
+## Data flow:
+
+* Zeek outputs logs in json
+* Each instance of Zeek has a Vector sidecar. This sidecar is responsible for watching log files in the zeek dir and performing initial transformation. The transformed logs are sent to a Vector Aggregator.
+* Vector Aggregator acts as a dedicated work queue to soak up spikes in load and also as durable storage for logs from the ephemeral Zeek/sidecar workloads.
+* Vector Aggregator has a single sink for Zeek logs, in-cluster Elastic Search.
+
+Related: https://vector.dev/docs/setup/deployment/topologies/#centralized
+
+Vector supports 50 different sinks. For this demo ELK was selected based on ease of setup and deployment.
+
+Vector can be transitioned to a stream oriented architecture in the future should scaling dictate the need for such a system.
+
+
 # Up and Running
 
 See the tools section for specific versions in use along with known issues and troubleshooting.
