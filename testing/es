@@ -1,4 +1,7 @@
 
+
+# kubectl exec -n zeek sensor -c sensor  -- cat dns.log |jq '.'
+
 #kubectl port-forward service/quickstart-es-http 9200 &
 
 #GET customlogs-generic-default/_search
