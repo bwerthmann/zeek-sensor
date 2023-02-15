@@ -303,54 +303,48 @@ k3s version v1.21.7-k3s1 (default)
 ## kubectl
 
 
-NOTE: kubectl v1.26.1 does not work with k3d's version of k3s.
-
-```console
-E0207 17:27:22.883778 1855235 memcache.go:255] couldn't get resource list for metrics.k8s.io/v1beta1: the server is currently unable to handle the request
-```
-```console
-WARNING: version difference between client (1.26) and server (1.21) exceeds the supported minor version skew of +/-1
-```
-
 Install kubectl which is k3d/k3s minor version +1.
 
 ```console
-$ sudo snap install --classic --channel 1.22/stable kubectl
-kubectl (1.22/stable) 1.22.17 from Canonical✓ installed
+$ sudo snap install --classic --channel 1.26/stable kubectl
+kubectl (1.26/stable) 1.26.1 from Canonical✓ installed
 ```
 
 ```console
-$ kubectl version --client -o yaml`
+$ kubectl version -o yaml`
 ```
 
 ```yaml
+$ kubectl version -o yaml
 clientVersion:
-  buildDate: "2023-01-04T19:18:50Z"
+  buildDate: "2023-01-19T02:26:55Z"
   compiler: gc
-  gitCommit: a7736eaf34d823d7652415337ac0ad06db9167fc
+  gitCommit: 8f94681cd294aa8cfd3407b8191f6c70214973a4
   gitTreeState: clean
-  gitVersion: v1.22.17
-  goVersion: go1.16.15
+  gitVersion: v1.26.1
+  goVersion: go1.19.5
   major: "1"
-  minor: "22"
+  minor: "26"
   platform: linux/amd64
+kustomizeVersion: v4.5.7
 serverVersion:
-  buildDate: "2021-11-29T16:40:13Z"
+  buildDate: "2023-01-26T00:47:47Z"
   compiler: gc
-  gitCommit: ac70570999c566ac3507d2cc17369bb0629c1cc0
+  gitCommit: 9176e03c5788e467420376d10a1da2b6de6ff31f
   gitTreeState: clean
-  gitVersion: v1.21.7+k3s1
-  goVersion: go1.16.10
+  gitVersion: v1.25.6+k3s1
+  goVersion: go1.19.5
   major: "1"
-  minor: "21"
+  minor: "25"
   platform: linux/amd64
+
 ```
 
 ```console
 $ kubectl cluster-info
-Kubernetes control plane is running at https://0.0.0.0:45253
-CoreDNS is running at https://0.0.0.0:45253/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-Metrics-server is running at https://0.0.0.0:45253/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+Kubernetes control plane is running at https://0.0.0.0:36023
+CoreDNS is running at https://0.0.0.0:36023/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://0.0.0.0:36023/api/v1/namespaces/kube-system/services/https:metrics-server:https/proxy
 
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
