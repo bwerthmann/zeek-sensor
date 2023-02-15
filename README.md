@@ -270,31 +270,6 @@ k3d version v5-dev
 k3s version v1.21.7-k3s1 (default)
 ```
 
-```
-$ k3d cluster create sensor
-INFO[0000] Prep: Network                                
-INFO[0000] Created network 'k3d-sensor'                 
-INFO[0000] Created image volume k3d-sensor-images       
-INFO[0000] Starting new tools node...                   
-INFO[0000] Pulling image 'ghcr.io/k3d-io/k3d-tools:latest' 
-INFO[0001] Creating node 'k3d-sensor-server-0'          
-INFO[0001] Pulling image 'docker.io/rancher/k3s:v1.21.7-k3s1' 
-INFO[0003] Starting Node 'k3d-sensor-tools'             
-INFO[0005] Creating LoadBalancer 'k3d-sensor-serverlb'  
-INFO[0005] Pulling image 'ghcr.io/k3d-io/k3d-proxy:latest' 
-INFO[0009] Using the k3d-tools node to gather environment information 
-INFO[0010] HostIP: using network gateway 172.18.0.1 address 
-INFO[0010] Starting cluster 'sensor'                    
-INFO[0010] Starting servers...                          
-INFO[0010] Starting Node 'k3d-sensor-server-0'          
-INFO[0014] All agents already running.                  
-INFO[0014] Starting helpers...                          
-INFO[0014] Starting Node 'k3d-sensor-serverlb'          
-INFO[0021] Injecting records for hostAliases (incl. host.k3d.internal) and for 2 network members into CoreDNS configmap... 
-INFO[0023] Cluster 'sensor' created successfully!       
-INFO[0023] You can now use it like this:                
-kubectl cluster-info
-```
 
 ## kubectl
 
