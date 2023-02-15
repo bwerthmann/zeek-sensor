@@ -116,6 +116,19 @@ service/vector-headless created
 statefulset.apps/vector created
 ```
 
+
+# Cleanup
+
+```console
+$ k3d cluster delete sensor 
+INFO[0000] Deleting cluster 'sensor'                    
+INFO[0004] Deleting cluster network 'k3d-sensor'        
+INFO[0005] Deleting 1 attached volumes...               
+INFO[0005] Removing cluster details from default kubeconfig... 
+INFO[0005] Removing standalone kubeconfig file (if there is one)... 
+INFO[0005] Successfully deleted cluster sensor!    
+```
+
 # Runbooks for tools install (and known issues / workarounds)
 
 This is a log of what worked for Ben, on his machine, at the time of install. It also captures any issues/workarounds encountered.
