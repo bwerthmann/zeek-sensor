@@ -10,3 +10,7 @@
 - op: add
   path: /spec/template/spec/containers/0/args/2
   value: --watch-config
+
+- op: replace
+  path: /spec/replicas
+  value: 3
