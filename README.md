@@ -201,6 +201,16 @@ Forwarding from [::1]:5601 -> 5601
 * Username: `elastic`
 * Password: `kubectl get secret quickstart-es-elastic-user -o go-template='{{.data.elastic | base64decode}}'; echo`
 
+## Kibana: One time setup
+
+* Go to `https://localhost:5601/app/management/kibana/dataViews`
+  * `Create data view`
+  * Name: `customlogs-generic-default`
+  * Pattern: `customlogs-generic-default`
+  * Save
+  * `Set as Default`
+* Go to `https://localhost:5601/app/discover#/`
+
 # Observe Vector log processing
 
 ## Open a `top` like TUI for a vector instance.
