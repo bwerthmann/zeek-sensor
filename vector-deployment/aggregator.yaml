@@ -59,3 +59,5 @@ sinks:
       type: customlogs
       dataset: generic
       namespace: default
+    # 'auto' seems to wedge vector when it starts before elastic is fully converged.
+    api_version: v8
