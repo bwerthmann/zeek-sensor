@@ -160,6 +160,35 @@ It should have a conn.log with at least one JSON entry
 Success!
 ```
 
+### Test that Logs are exported
+
+```console
+$ bash testing/vle.sh ; echo $?
+It should get a recent log uid from deployments/sensor
+uid=CFrH1a2aH5PVc734y9
+It should be in Elastic Search
+Handling connection for 9200
+false
+Handling connection for 9200
+false
+Handling connection for 9200
+false
+Handling connection for 9200
+false
+Handling connection for 9200
+false
+Handling connection for 9200
+false
+Handling connection for 9200
+false
+Handling connection for 9200
+false
+Handling connection for 9200
+true
+Success!
+0
+```
+
 # Access Zeek Logs with Kibana
 
 * Port Forward Kibana
