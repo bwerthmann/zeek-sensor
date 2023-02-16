@@ -78,8 +78,7 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 
 ```console
-$ cd elastic-deployment
-$ kubectl apply -f 00-crds.yaml
+$ kubectl apply -f elastic-deployment/00-crds.yaml
 customresourcedefinition.apiextensions.k8s.io/agents.agent.k8s.elastic.co created
 customresourcedefinition.apiextensions.k8s.io/apmservers.apm.k8s.elastic.co created
 customresourcedefinition.apiextensions.k8s.io/beats.beat.k8s.elastic.co created
@@ -91,7 +90,7 @@ customresourcedefinition.apiextensions.k8s.io/kibanas.kibana.k8s.elastic.co crea
 customresourcedefinition.apiextensions.k8s.io/stackconfigpolicies.stackconfigpolicy.k8s.elastic.co created
 ```
 ```console
-$ kubectl apply -f 10-operator.yaml
+$ kubectl apply -f elastic-deployment/10-operator.yaml
 namespace/elastic-system created
 serviceaccount/elastic-operator created
 secret/elastic-webhook-server-cert created
@@ -105,7 +104,7 @@ statefulset.apps/elastic-operator created
 validatingwebhookconfiguration.admissionregistration.k8s.io/elastic-webhook.k8s.elastic.co created
 ```
 ```console
-$ kubectl apply -f 40-agent-cluster.yaml
+$ kubectl apply -f elastic-deployment/40-agent-cluster.yaml
 agent.agent.k8s.elastic.co/fleet-server created
 kibana.kibana.k8s.elastic.co/quickstart created
 elasticsearch.elasticsearch.k8s.elastic.co/quickstart created
@@ -117,8 +116,7 @@ clusterrolebinding.rbac.authorization.k8s.io/elastic-agent created
 ## Install Vector Aggregator
 
 ```console
-$ cd vector-deployment
-$ kubectl apply -k .
+$ kubectl apply -k vector-deployment/.
 serviceaccount/vector created
 configmap/vector created
 service/vector created
@@ -151,6 +149,19 @@ Waiting for deployments to stabilize...
 Deployments stabilized in 2.196 seconds
 You can also run [skaffold run --tail] to get the logs
 ```
+
+### Note: `Error from server (ServiceUnavailable)`
+
+If you get this error just run `skaffold run --profile zeek-deployment` again. This appears to be a bug in skaffold. 
+
+```
+waiting for deletion: running [kubectl --context k3d-sensor get -f - --ignore-not-found -ojson]
+ - stdout: ""
+ - stderr: "Error from server (ServiceUnavailable): the server is currently unable to handle the request (get namespaces zeek)\nError from server (ServiceUnavailable): the server is currently unable to handle the request (get configmaps vector-sidecar-b8t59h8t22)\nError from server (ServiceUnavailable): the server is currently unable to handle the request (get deployments.apps sensor)\n"
+ - cause: exit status 1
+```
+
+## Test Zeek
 
 ### Test Zeek Dataplane
 
