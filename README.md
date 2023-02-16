@@ -27,8 +27,10 @@ See the tools section for specific versions in use along with known issues and t
 
 YMMV on the resources. ELK is by far the largest consumer of resources. Note that _without_ memory limits every node scheduler will think each _node_ has total RAM availible. Placing a memory limit on all nodes ensures that the scheduler behavior is more realistic. The same it true for CPU as well.
 
+```bash
+k3d cluster create sensor -s 3 --servers-memory 4G -a 4 --agents-memory 16G
+```
 ```console
-$ k3d cluster create sensor -s 3 --servers-memory 4G -a 4 --agents-memory 16G
 INFO[0000] Prep: Network                                
 INFO[0000] Created network 'k3d-sensor'                 
 INFO[0000] Created image volume k3d-sensor-images       
