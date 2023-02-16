@@ -3,22 +3,21 @@
 This project is an example deployment of Zeek in k3d/k3s. Zeek's primary
 artifact of interest is it's log files. Each entry represents network
 events. For this demo we are side-stepping k8s logging in favor of
-a dedicated log processing pipeline for zeek events. Vector was selected
-due to it's runtime simplicity, high performance / low-overhead, and flexibility in processing log (and metrics) data, and observability.
+a dedicated log processing pipeline for zeek events.
+Vector was selected due to it's runtime simplicity, high performance / low-overhead, and flexibility in processing log (and metrics) data, and observability.
+Additionally, Vector supports 40 sources, 13 transforms, 50 sinks and [end-to-end-acknowledgements](<https://vector.dev/docs/about/under-the-hood/architecture/end-to-end-acknowledgements/>) which is critical for a class of end users.
+For this demo ELK was selected based on ease of setup and deployment thanks to <https://github.com/elastic/cloud-on-k8s>.
 
-## Data flow:
+## Data flow
 
-* Zeek outputs logs in json
-* Each instance of Zeek has a Vector sidecar. This sidecar is responsible for watching log files in the zeek dir and performing initial transformation. The transformed logs are sent to a Vector Aggregator.
+* Zeek outputs logs in json (via `LogAscii::use_json=T`)
+* Each instance of Zeek has a Vector sidecar. This sidecar is responsible for watching log files in the zeek dir and performing initial transformation via `remap` via [`Vector Remap Language (VRL)`](<https://vector.dev/docs/reference/vrl/>). The transformed logs are sent to a Vector Aggregator.
 * Vector Aggregator acts as a dedicated work queue to soak up spikes in load and also as durable storage for logs from the ephemeral Zeek/sidecar workloads.
 * Vector Aggregator has a single sink for Zeek logs, in-cluster Elastic Search.
+* Vector Aggregator writes to Elastic Search via [Data Streams API](<https://www.elastic.co/guide/en/elasticsearch/reference/8.6/data-streams.html>).
+* Elastic can be queried directly or via in-cluster Kibana. See `Access Zeek Logs with Kibana`.
 
-Related: https://vector.dev/docs/setup/deployment/topologies/#centralized
-
-Vector supports 50 different sinks. For this demo ELK was selected based on ease of setup and deployment.
-
-Vector can be transitioned to a stream oriented architecture in the future should scaling dictate the need for such a system.
-
+Vector docs call this design [`centralized`](<https://vector.dev/docs/setup/deployment/topologies/#centralized>). Vector can be transitioned to a stream oriented (Kafka/Kinesis) architecture in the future should scaling dictate the additional administrative overhead worthwhile.
 
 # Up and Running
 
